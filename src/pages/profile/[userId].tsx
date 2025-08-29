@@ -1,29 +1,25 @@
 import apiClient from '@/lib/apiClients';
 import Post from '@/components/Post';
 import { PostType, UserType } from '@/types';
-// import { GetServerSideProps } from 'next';
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Image from "next/image";
-import React from 'react'
+import React from 'react';
 import { ParsedUrlQuery } from 'querystring';
+import { useAuth } from '@/context/auth';
+import Link from 'next/link';
 
 type Props = {
     user: UserType;
 };
 
-// export const getServerSideProps: GetServerSideProps = async (context: any) => {
 interface Params extends ParsedUrlQuery {
   userId: string;
 }
 
 export const getServerSideProps: GetServerSideProps<Props, Params> = async (context) => {
-
-  
-    // const { userId } = context.query;
-     const { userId } = context.params!;
+    const { userId } = context.params!;
 
     try {
-      // この単一のエンドポイントでユーザープロフィールと投稿が返されるはずです
       const response = await apiClient.get(`/users/profile/${userId}`);
 
       return {
@@ -40,6 +36,8 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async (cont
 };
 
 const UserProfile = ({ user }: Props) => {
+  const { user: loggedInUser } = useAuth();
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="w-full max-w-xl mx-auto">
@@ -58,7 +56,16 @@ const UserProfile = ({ user }: Props) => {
             </div>
           </div>
         </div>
-        {/* Postコンポーネントを使って各投稿をレンダリングします */}
+
+        {/* ログインユーザー自身のプロフィールページの場合のみ編集ボタンを表示 */}
+        {loggedInUser && loggedInUser.id === user.id && (
+          <div className="text-right mb-4">
+            <Link href="/profile/edit" className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                プロフィールを編集
+            </Link>
+          </div>
+        )}
+
         {user.posts?.map((post: PostType) => (
           <Post key={post.id} post={post} />
         ))}
