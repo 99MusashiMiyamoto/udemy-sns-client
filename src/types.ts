@@ -38,6 +38,7 @@ export type PostType = {
   content: string;
   createdAt: string;
   author: PostAuthorType;
+  likesCount?: number;
 };
 
 // プロフィールページで使うユーザー情報の型

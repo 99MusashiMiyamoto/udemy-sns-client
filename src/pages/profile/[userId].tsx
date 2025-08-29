@@ -1,4 +1,5 @@
 import apiClient from '@/lib/apiClients';
+import axios from 'axios';
 import Post from '@/components/Post';
 import { PostType, UserType } from '@/types';
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
@@ -20,7 +21,11 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async (cont
     const { userId } = context.params!;
 
     try {
-      const response = await apiClient.get(`/users/profile/${userId}`);
+      const apiBase = process.env.NEXT_PUBLIC_API_BASEURL || process.env.API_BASE_URL;
+      if (!apiBase) {
+        throw new Error('API base URL is not configured. Set NEXT_PUBLIC_API_BASEURL or API_BASE_URL.');
+      }
+      const response = await axios.get(`${apiBase}/users/profile/${userId}`);
 
       return {
         props: {
