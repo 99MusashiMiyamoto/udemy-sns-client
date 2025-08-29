@@ -3,7 +3,7 @@ import Post from '@/components/Post';
 import { PostType, UserType } from '@/types';
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Image from "next/image";
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import { useAuth } from '@/context/auth';
 import Link from 'next/link';
@@ -37,6 +37,12 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async (cont
 
 const UserProfile = ({ user }: Props) => {
   const { user: loggedInUser } = useAuth();
+
+  // デバッグ用ログ
+  useEffect(() => {
+    console.log("ログイン中のユーザーID:", loggedInUser?.id, "(型:", typeof loggedInUser?.id, ")");
+    console.log("表示しているプロフィールID:", user?.id, "(型:", typeof user?.id, ")");
+  }, [loggedInUser, user]);
 
   return (
     <div className="container mx-auto px-4 py-8">
