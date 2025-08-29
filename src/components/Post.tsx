@@ -1,19 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
+import { PostType } from '@/types';
 
 type PostProps = {
-  post: {
-    id: number;
-    content: string;
-    createdAt: string;
-    author: {
-      id: number;
-      username: string;
-      profile?: {
-        profileImageUrl?: string;
-      };
-    };
-  };
+  post: PostType;
 };
 
 const Post = ({ post }: PostProps) => {

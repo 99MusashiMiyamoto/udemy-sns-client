@@ -1,20 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Post from './Post';
 import apiClient from '@/lib/apiClients';
-
-// PostとUserの型を定義
-type PostType = {
-  id: number;
-  content: string;
-  createdAt: string;
-  author: {
-    id: number;
-    username: string;
-    profile?: {
-      profileImageUrl?: string;
-    };
-  };
-};
+import { PostType } from '@/types';
 
 const Timeline = () => {
   const [postText, setPostText] = useState<string>("");
