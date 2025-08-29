@@ -9,8 +9,11 @@ const ProfileEdit = () => {
 
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
+  const [mounted, setMounted] = useState(false);
 
+  // ブラウザ側でのレンダリングが完了してから実行
   useEffect(() => {
+    setMounted(true);
     if (user) {
       setUsername(user.username);
       setBio(user.profile?.bio || "");
@@ -34,8 +37,9 @@ const ProfileEdit = () => {
     }
   };
 
-  if (!user) {
-    return <div>ログインしてください。</div>;
+  // マウントが完了するまで何も表示しない（ハイドレーションエラー対策）
+  if (!mounted || !user) {
+    return null; // またはローディングスピナーなどを表示
   }
 
   return (
