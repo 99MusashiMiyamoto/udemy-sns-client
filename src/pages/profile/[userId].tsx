@@ -3,7 +3,7 @@ import Post from '@/components/Post';
 import { PostType, UserType } from '@/types';
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Image from "next/image";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import { useAuth } from '@/context/auth';
 import Link from 'next/link';
@@ -37,12 +37,11 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async (cont
 
 const UserProfile = ({ user }: Props) => {
   const { user: loggedInUser } = useAuth();
+  const [mounted, setMounted] = useState(false);
 
-  // デバッグ用ログ
   useEffect(() => {
-    console.log("ログイン中のユーザーID:", loggedInUser?.id, "(型:", typeof loggedInUser?.id, ")");
-    console.log("表示しているプロフィールID:", user?.id, "(型:", typeof user?.id, ")");
-  }, [loggedInUser, user]);
+    setMounted(true);
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -63,8 +62,8 @@ const UserProfile = ({ user }: Props) => {
           </div>
         </div>
 
-        {/* ログインユーザー自身のプロフィールページの場合のみ編集ボタンを表示 */}
-        {loggedInUser && loggedInUser.id === user.id && (
+        {/* マウント後に、ログインユーザー自身のプロフィールページの場合のみ編集ボタンを表示 */}
+        {mounted && loggedInUser && loggedInUser.id === user.id && (
           <div className="text-right mb-4">
             <Link href="/profile/edit" className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
                 プロフィールを編集
