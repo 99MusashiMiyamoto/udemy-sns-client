@@ -11,6 +11,7 @@ interface AuthContextType {
   user: User | null;
   login: (token: string) => void;
   logout: () => void;
+  isAuthChecked: boolean; // 新しいプロパティ
 }
 
 interface AuthProviderProps {
@@ -21,6 +22,7 @@ const AuthContext = React.createContext<AuthContextType>({
   user: null,
   login: () => {},
   logout: () => {},
+  isAuthChecked: false, // 初期値
 });
 
 export const useAuth = () => {
@@ -29,6 +31,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isAuthChecked, setIsAuthChecked] = useState(false); // 新しい状態
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
@@ -43,7 +46,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .catch((err) => {
           console.log(err);
           localStorage.removeItem("auth_token");
+          setUser(null);
+        })
+        .finally(() => {
+          setIsAuthChecked(true); // 認証チェック完了
         });
+    } else {
+      setUser(null);
+      setIsAuthChecked(true); // 認証チェック完了
     }
   }, []);
 
@@ -68,6 +78,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     user,
     login,
     logout,
+    isAuthChecked, // コンテキストに含める
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
