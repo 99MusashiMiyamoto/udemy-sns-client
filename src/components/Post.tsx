@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 type PostProps = {
   post: {
@@ -16,17 +17,17 @@ type PostProps = {
 };
 
 const Post = ({ post }: PostProps) => {
-  const defaultProfileImage = "https://via.placeholder.com/150";
-
   return (
     <div className="bg-white shadow-md rounded p-4 mb-4">
       <div className="mb-4">
         <div className="flex items-center mb-2">
-          <img
-            className="w-10 h-10 rounded-full mr-2"
-            src={post.author.profile?.profileImageUrl || defaultProfileImage}
-            alt="User Avatar"
-          />
+          <Link href={`/profile/${post.author.id}`}>
+            <img
+              className="w-10 h-10 rounded-full mr-2 cursor-pointer"
+              src={post.author.profile?.profileImageUrl || "/default-profile.png"}
+              alt="User Avatar"
+            />
+          </Link>
           <div>
             <h2 className="font-semibold text-md">{post.author.username}</h2>
             <p className="text-gray-500 text-sm">
